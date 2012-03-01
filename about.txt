@@ -1,0 +1,31 @@
+Andrew Nelson's Mood/Boredom Visualizer
+
+
+ABOUT
+Taking things a step further than an augmented drawing program, I decided to build a program that draws your feelings via input that itself is usually a manifestation of your boredom: idly tapping your fingers on a surface. For example, you could be sitting at your desk bored waiting for a friend to show up, and you start tapping one finger on a desk slowly. Or maybe you've been there for quite some time and you tap a little faster. Alternatively, you're in a test and stuck on a problem; you might be a little tense, so you start tapping all your fingers quickly.
+
+In any case, the program interprets how quickly you are typing keys and assigns it a color. This color then flashes as a randomly sized and placed circle on the screen and then fades to an opacity (0 to 255, or none to full) determined by the time between taps. This is also different depending on whether you're tapping with one finger or multiple fingers. For the user, the only instructions are to have some varying emotion and tap on the keyboard as if you were tapping on a desk. Tap slowly, and the color is a cool blue. Tap quickly and it's a hot red! To clear the screen for more art, just press backspace (or delete on a mac).
+
+This would be a nice port to a touchscreen mobile device, and it would be somewhat more practical than a keyboard. The user could take out the phone and tap on it. Processing is a very pleasant way to explore digital graphics, and I'm quite happy with this assignment!
+
+
+METHOD
+First, I needed to physically manifest the abstract: boredom. What do people do when they're bored? anxious? tense? impatient? The most common action, as I gathered from general experience as well as peer reviews is that they do something with their hands. Many doodle, but I figured with all the examples about ways to doodle on a computer, I should do something not quite so typical. Tapping your fingers, for example, is one way people occupy themselves while in the aforementioned emotional states, and I, for example, visualize instruments and beats via my fingers in how I tap to a song. I translated this into a way to draw by determining the color of the emotion (see color theory) and organized it into two categories: single-finger tapping, and multi-finger rapping.
+
+If you have a persistent emotion, you're more likely to keep tapping, and thus I translated that as only keeping a particular instant of drawing/tapping (manifested as the generated circle) if the user taps again within a set time period. This time period was investigated during peer reviews by polling students about how and how quickly they tap under particular circumstances. 
+
+So if the user taps three times fairly quickly (see thFast variable for the threshold speed of "fast") and stops within this time period, it would draw the first circle as red upon tap #1, fade out slightly, and then stop fading when tap #2 occurs. This would happen the same way for tap #2; however, since the user stopped after just three taps, the third tap would draw and then fade out completely. This would indicate the user has left his/her emotion in that state: two red dots. If the user continued tapping rather quickly, maybe tapering off toward the end to a slow tap, then he/she could see that the lower layers are red, and a few top-layer circles are green with a blue circle here and there. Since the circles are drawn on top of each other with varying transparency, this could provide an emotional history for the user. 
+
+
+TECHNICAL
+First, the fun all begins with a key press, so a keyPressed() method is the starting point. First the program determines the time between key presses to then determine the color of the emotion. Quick procession in typing is interpreted as more tense, and yields a red; medium, a green; slow, a blue. Within these time frames, I further specify the color by a more gradual system by mapping the strike times into the rgb frame (0-255). 
+
+To create a bit of a more engaging display, the circles are generated at random points and sizes. Once these parameters of the circles are created, it indicates that it's time to fade them out.
+
+Within the draw method, a startup on-screen text gives instructions. After that, every draw call keeps the previous artwork via the lastBackground call that grabs the screen's previous state and draws over it. 
+
+Once fade is true, that is every time a key is pressed, it steps by 1 from 0 to 100 (a way to change how long each fade lasts) each time draw is called per keypress, mapping it to the rgb alpha range of 0-255. The fade function is essentially a timed alpha decreaser. Once alpha is zero, it signals the end of fade and waits for new key presses. After each iteration of the fader, it fills a circle with "urgency" or the variable I assigned to color depending on time between key strikes, and stows the values in PVectors. The for loop dealing with the array is borrowed from an example in class, as I had never built a drawing program before and was quite confused on how to keep drawings on the screen. Finally, the ellipse is plotted.
+
+
+NOTE
+You may have noticed that lines pertaining to "mood" were commented out. This was going to be an additional drawing mechanism to draw more attention to the single- or multi-key press; however, I could not quite think of a way to further visualize it in a meaningful way. As I mentioned before, this would be a feature in a mobile device port in a future project. If you have anything to suggest for this particular feature I'd be interested in your feedback!
